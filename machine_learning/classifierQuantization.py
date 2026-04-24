@@ -21,6 +21,8 @@ test_loader = torch.utils.data.DataLoader(
     datasets.MNIST('./data', train=False, transform=transform),
     batch_size=1000
 )
+
+# Define a small model
 class SmallNet(nn.Module):
     def __init__(self):
         super().__init__()
@@ -37,6 +39,8 @@ class SmallNet(nn.Module):
         return self.net(x)
 
 model = SmallNet().to(device)
+
+#Train (fast: 1–2 epochs)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=0.001)
 
@@ -48,6 +52,7 @@ for epoch in range(2):
         loss = criterion(output, target)
         loss.backward()
         optimizer.step()
+# Accuracy function
 def evaluate(model):
     model.eval()
     correct = 0
@@ -61,6 +66,8 @@ def evaluate(model):
     return correct / total
 
 print("FP32 Accuracy:", evaluate(model))
+
+# Measure latency
 def measure_latency(model, runs=100):
     model.eval()
     dummy = torch.randn(1, 1, 28, 28)
@@ -75,6 +82,8 @@ print("FP32 Latency:", fp32_latency)
 quantized_model = torch.quantization.quantize_dynamic(
     model, {nn.Linear}, dtype=torch.qint8
 )
+
+# Evaluate
 print("INT8 Accuracy:", evaluate(quantized_model))
 
 int8_latency = measure_latency(quantized_model)
