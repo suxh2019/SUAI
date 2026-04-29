@@ -11,6 +11,14 @@ import matplotlib.pyplot as plt
 3. Show performance drop
 4. Fix with domain randomization
 """
+
+"""
+What we want to show:
+1) continuous control
+2) RL training
+3)environment mismatch
+4)robustness improvement
+"""
 # -----------------------------
 # Policy Network
 # -----------------------------
