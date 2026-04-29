@@ -5,6 +5,12 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
+"""
+1. Train PPO agent on Pendulum-v1
+2. Modify environment (simulate real-world mismatch)
+3. Show performance drop
+4. Fix with domain randomization
+"""
 # -----------------------------
 # Policy Network
 # -----------------------------
