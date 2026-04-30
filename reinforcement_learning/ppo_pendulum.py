@@ -146,7 +146,7 @@ def evaluate(env, policy, modify=False):
     return np.mean(rewards)
 
 # -----------------------------
-# Main
+# Main function
 # -----------------------------
 if __name__ == "__main__":
     print("Training baseline...")
