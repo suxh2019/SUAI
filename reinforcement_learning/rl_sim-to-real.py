@@ -5,6 +5,8 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
+# For the project: Robust Reinforcement Learning for Sim-to-Real Control
+
 # -----------------------------
 # Policy Network
 # -----------------------------
