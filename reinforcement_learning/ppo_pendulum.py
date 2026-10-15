@@ -23,15 +23,19 @@ What we want to show:
 # Policy Network
 # -----------------------------
 class Policy(nn.Module):
+    # obs_dim: dimension of the observation/state; act_dim: dimension of the action.
     def __init__(self, obs_dim, act_dim):
         super().__init__()
+        # Two-hidden-layer MLP
         self.net = nn.Sequential(
             nn.Linear(obs_dim, 64),
             nn.Tanh(),
             nn.Linear(64, 64),
             nn.Tanh()
         )
+        # Compute the mean of the action distribution, the center of a Gaussian distribution.
         self.mean = nn.Linear(64, act_dim)
+        # Create a trainable parameter representing the log standard deviation
         self.log_std = nn.Parameter(torch.zeros(act_dim))
 
     def forward(self, x):
