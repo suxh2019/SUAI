@@ -6,7 +6,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 """
-1. Train PPO agent on Pendulum-v1
+1. Train agent on Pendulum-v1
 2. Modify environment (simulate real-world mismatch)
 3. Show performance drop
 4. Fix with domain randomization
@@ -42,6 +42,7 @@ class Policy(nn.Module):
         x = self.net(x)
         mean = self.mean(x)
         std = torch.exp(self.log_std)
+        #Return the parameters of a Gaussian policy:
         return mean, std
 
 # -----------------------------
@@ -49,27 +50,37 @@ class Policy(nn.Module):
 # -----------------------------
 def get_action(policy, obs):
     mean, std = policy(obs)
-    dist = torch.distributions.Normal(mean, std)
+    #mean: the center of the action distribution; creates a normal distribution for the action.
+    dist = torch.distributions.Normal(mean, std) 
+    # draws one random action from that distribution.
     action = dist.sample()
+    # If the action has multiple dimensions, dist.log_prob(action) gives one log-probability per dimension, and .sum() combines them.
+    # ecause for independent action dimensions, the joint density is the product,Taking the log turns multiplication into addition
     log_prob = dist.log_prob(action).sum()
+    # clamp(-2, 2) forces the action to stay between -2 and 2.
     return action.clamp(-2, 2), log_prob
 
 # -----------------------------
 # Modify environment (sim→real)
 # -----------------------------
 def modify_env(env):
+    # maximum speed increases by 20%.
     env.unwrapped.max_speed *= 1.2
+    #maximum torque decreases by 20%
     env.unwrapped.max_torque *= 0.8
 
 # -----------------------------
 # Domain randomization
 # -----------------------------
+#creates a mismatch between the environment used for training and the environment used for testing.
 def randomize_env(env):
     env.unwrapped.max_speed = np.random.uniform(6, 10)
     env.unwrapped.max_torque = np.random.uniform(1.5, 2.5)
 
 # -----------------------------
-# Train PPO (simplified)
+# Train
+# Not really PPO because it does not use PPO's probability ratio, clipping objective, advantage estimates, or old policy.
+# It is closer to a basic REINFORCE / vanilla policy gradient algorithm, 
 # -----------------------------
 def train(randomize=False):
     env = gym.make("Pendulum-v1")
