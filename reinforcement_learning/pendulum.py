@@ -82,31 +82,42 @@ def randomize_env(env):
 # Not really PPO because it does not use PPO's probability ratio, clipping objective, advantage estimates, or old policy.
 # It is closer to a basic REINFORCE / vanilla policy gradient algorithm, 
 # -----------------------------
+# randomize=False means normally train on the default environment.
+# If randomize=True, the environment dynamics are changed by randomize_env(env)
 def train(randomize=False):
+    # creates the Pendulum environment. The goal is to swing the pendulum upright and keep it.
     env = gym.make("Pendulum-v1")
+    # Find the dimensions.
     obs_dim = env.observation_space.shape[0]
     act_dim = env.action_space.shape[0]
-
+    # Create my neural-network policy
     policy = Policy(obs_dim, act_dim)
+    #Create an Adam optimizer. The optimizer updates the neural-network parameters after each episode.
     optimizer = optim.Adam(policy.parameters(), lr=3e-4)
-
+    # Store the total reward from each episode and later plot the learning curve.
     rewards_log = []
 
     for episode in range(100):
+        # reset the environment.
         obs, _ = env.reset(seed=42)
+        # Convert the NumPy observation into a PyTorch tensor
         obs = torch.tensor(obs, dtype=torch.float32)
 
         if randomize:
             randomize_env(env)
-
+        #store information for the episode
         total_reward = 0
         log_probs = []
         rewards = []
-
+        # run up to 200 time steps
         for _ in range(200):
+            # Use the policy to sample an action
             action, log_prob = get_action(policy, obs)
+            # sends the action to the environment.The environment returns: next state,reward for this action; 
+            # done: episode ended normally; trunc: episode stopped due to time limit or other truncation
+            # action is a PyTorch tensor.Gym expects a NumPy array. detach() removes it from PyTorch's gradient graph before converting it.
             next_obs, reward, done, trunc, _ = env.step(action.detach().numpy())
-
+            
             log_probs.append(log_prob)
             rewards.append(reward)
             total_reward += reward
@@ -122,15 +133,20 @@ def train(randomize=False):
         for r in reversed(rewards):
             G = r + 0.99 * G
             returns.insert(0, G)
+        # convert the returns to a PyTorch tensor
         returns = torch.tensor(returns)
-
+        # turn a Python list of tensors into one tensor.
+        # Example: before:[tensor(-1.0), tensor(-0.8), tensor(-1.2)] after:tensor([-1.0, -0.8, -1.2])
         log_probs = torch.stack(log_probs)
+        # key policy-gradient line, -\log \pi(a_t|s_t) G_t
         loss = -(log_probs * returns).mean()
-
+        # clear old gradients.
         optimizer.zero_grad()
+        #compute new gradients through backpropagation
         loss.backward()
+        #update the policy parameters
         optimizer.step()
-
+        #record the total reward for this episode
         rewards_log.append(total_reward)
         print(f"Episode {episode}, Reward {total_reward:.2f}")
 
