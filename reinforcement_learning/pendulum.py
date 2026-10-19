@@ -25,10 +25,14 @@ What we want to show:
 class Policy(nn.Module):
     # obs_dim: dimension of the observation/state; act_dim: dimension of the action.
     def __init__(self, obs_dim, act_dim):
+        # initializes the parent nn.Module class.  PyTorch needs to 
+        # register the model's layers and trainable parameters.
         super().__init__()
         # Two-hidden-layer MLP
         self.net = nn.Sequential(
+            # Define a neural network with two hidden layers, each containing 64 neurons.
             nn.Linear(obs_dim, 64),
+            # Tanh introduces nonlinearity so that the policy can learn complex relationships between observations and actions.
             nn.Tanh(),
             nn.Linear(64, 64),
             nn.Tanh()
@@ -39,6 +43,7 @@ class Policy(nn.Module):
         self.log_std = nn.Parameter(torch.zeros(act_dim))
 
     def forward(self, x):
+        # Process the observation
         x = self.net(x)
         mean = self.mean(x)
         std = torch.exp(self.log_std)

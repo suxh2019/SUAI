@@ -22,6 +22,7 @@ class Policy(nn.Module):
         self.net = nn.Sequential(
             # Fully connected layer
             nn.Linear(obs_dim, 64),
+            # Tanh introduces nonlinearity so that the policy can learn complex relationships between observations and actions.
             nn.Tanh(),
             nn.Linear(64, 64),
             nn.Tanh(),
@@ -29,7 +30,7 @@ class Policy(nn.Module):
         self.mean = nn.Linear(64, act_dim)
         # Create a trainable parameter representing the log standard deviation
         self.log_std = nn.Parameter(torch.zeros(act_dim))
-
+    # Process the observation
     def forward(self, x):
         x = self.net(x)
         mean = self.mean(x)
