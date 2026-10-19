@@ -26,20 +26,23 @@ class NoisyCartPole(gym.Wrapper):
         obs, info = self.env.reset(**kwargs)
 
         # Add small observation noise, size=obs.shape generates noise with the same shape as the observation
-        # 0 is the mean;0.01 is the standard deviation
+        # 0 is the mean;0.01 is the standard deviation; Implement observation-noise augmentation
         obs = obs + np.random.normal(0, 0.01, size=obs.shape)
 
         return obs, info
-
+    # The step() function is called whenever the agent takes an action.
     def step(self, action):
+        #This calls the original environment's step() method. obs:Next observation,reward:Reward received,
+        # terminated:Whether an MDP termination condition occurred;terminated = True means the agent reached a terminal condition, such as the pole falling beyond the allowed angle.
+        # truncated = True means the episode ended because of a time limit or another external constraint. a truncated episode may still require bootstrapping a value estimate.
         obs, reward, terminated, truncated, info = self.env.step(action)
 
-        # Add observation noise
-        obs = obs + np.random.normal(0, 0.01, size=obs.shape)
+        # Add observation noise; follows Gymnasium's environment seeding mechanism
+        obs = obs + self.np_random.normal(0, 0.01, size=obs.shape)
 
         # Small reward shaping bonus
         pole_angle = abs(obs[2])
-
+        # This modifies the environment's original reward.The reward bonus is also affected by random observation noise.
         reward += (1.0 - pole_angle)
 
         return obs, reward, terminated, truncated, info
@@ -54,20 +57,27 @@ env = gym.make("CartPole-v1")
 env = NoisyCartPole(env)
 
 # -----------------------------------
-# PPO Model
+# PPO Model 
 # -----------------------------------
 model = PPO(
+    # This tells Stable-Baselines3 to use a multilayer perceptron (MLP) to represent the policy.
+    # An MLP is a feedforward neural network with fully connected layers.
     "MlpPolicy",
     env,
     verbose=1,
     learning_rate=3e-4,
-    n_steps=1024,
+    # This controls how many environment steps PPO collects per environment before performing an optimization phase.
+    # With one environment, PPO collects 1,024 transitions in each rollout.n_steps=1024 is not the episode length
+    # CartPole episodes may end before 1,024 steps, and PPO can collect transitions across several episodes in a single rollout.
+    #n_steps=1024, After collecting the rollout, PPO splits the collected data into minibatches.
     batch_size=64,
     gamma=0.99,
 )
 
 # -----------------------------------
-# Train
+# Train: requests approximately 100,000 interactions with the environment.Because PPO collects 
+# complete rollout batches, the actual training step count may slightly exceed 100,000.
+#For this configuration, the rollout size is 1,024, so training will typically collect 99 rollouts.
 # -----------------------------------
 model.learn(total_timesteps=100000)
 
