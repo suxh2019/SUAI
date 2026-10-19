@@ -52,6 +52,7 @@ class Policy(nn.Module):
 
 # -----------------------------
 # Sample action
+# Continuous action
 # -----------------------------
 def get_action(policy, obs):
     mean, std = policy(obs)

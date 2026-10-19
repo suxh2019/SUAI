@@ -3,28 +3,30 @@ import numpy as np
 from stable_baselines3 import PPO
 
 '''
-Robust CartPole Control with PPO | PyTorch, Gymnasium
+Train a Proximal Policy Optimization (PPO) agent to balance a pole on 
+a moving cart using Gymnasium and Stable-Baselines3.
 
-• Developed reinforcement learning policies using Proximal Policy Optimization (PPO) for balance control tasks in simulated environments.
-
-• Designed reward functions and observation perturbation strategies to improve policy stability and robustness.
-
-• Applied domain randomization techniques including noisy observations and varying environment dynamics to improve generalization.
-
-• Built training and evaluation pipelines using Stable-Baselines3 and analyzed policy performance under different disturbance conditions.
+The main idea is to make the agent more robust by adding random noise to its observations during training.
+Stable-Baselines3 PPO's MlpPolicy uses a categorical action distribution
 '''
 
 # -----------------------------------
 # Domain Randomization Wrapper
 # -----------------------------------
+# gym.Wrapper, a Gymnasium class that allows you to modify an existing environment without rewriting it
 class NoisyCartPole(gym.Wrapper):
     def __init__(self, env):
         super().__init__(env)
+    # Override the environment's reset() method.
+    # set() initializes a new episode and returns the initial observation.
+    # The **kwargs parameter allows the function to accept keyword arguments such as:env.reset(seed=42)
 
     def reset(self, **kwargs):
+        # obs: Initial observation. info: A dictionary containing additional information.
         obs, info = self.env.reset(**kwargs)
 
-        # Add small observation noise
+        # Add small observation noise, size=obs.shape generates noise with the same shape as the observation
+        # 0 is the mean;0.01 is the standard deviation
         obs = obs + np.random.normal(0, 0.01, size=obs.shape)
 
         return obs, info
@@ -46,6 +48,7 @@ class NoisyCartPole(gym.Wrapper):
 # -----------------------------------
 # Create Environment
 # -----------------------------------
+# In CartPole-v1, the default maximum episode length is 500 steps.
 env = gym.make("CartPole-v1")
 
 env = NoisyCartPole(env)
