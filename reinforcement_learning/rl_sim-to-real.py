@@ -6,20 +6,28 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 # For the project: Robust Reinforcement Learning for Sim-to-Real Control
-#
+# Define a stochastic policy neural network in PyTorch, commonly used in 
+# reinforcement learning algorithms such as Policy Gradient, REINFORCE, 
+# and PPO (Proximal Policy Optimization)
 # -----------------------------
 # Policy Network
 # -----------------------------
+
 class Policy(nn.Module):
     def __init__(self, obs_dim, act_dim):
+        # initializes the parent nn.Module class.  PyTorch needs to 
+        # register the model's layers and trainable parameters.
         super().__init__()
+        # Define a neural network with two hidden layers, each containing 64 neurons.
         self.net = nn.Sequential(
+            # Fully connected layer
             nn.Linear(obs_dim, 64),
             nn.Tanh(),
             nn.Linear(64, 64),
             nn.Tanh(),
         )
         self.mean = nn.Linear(64, act_dim)
+        # Create a trainable parameter representing the log standard deviation
         self.log_std = nn.Parameter(torch.zeros(act_dim))
 
     def forward(self, x):
