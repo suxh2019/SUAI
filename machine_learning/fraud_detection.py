@@ -19,35 +19,34 @@ from sklearn.metrics import (
 
 '''
 Credit Card Fraud Detection | Machine Learning 
-• Developed a machine learning fraud detection system using Python, Pandas, and
-scikit-learn to classify fraudulent financial transactions and identify suspicious
-activity patterns.
-• Built end-to-end ML pipelines including data preprocessing, feature scaling, model
-training, and evaluation using Logistic Regression and Random Forest classifiers.
-• Evaluated model performance using precision, recall, F1-score, and confusion matrix
-analysis on imbalanced transaction datasets to improve fraud detection reliability.
+• builds a credit card fraud detection system using two supervised machine learning algorithms 
+   (1) Logistic Regression — predicts whether a transaction is fraudulent using a linear classification model.
+   (2) Random Forest — combines multiple decision trees to classify transactions.
+It then evaluates both models using accuracy, confusion matrices, and classification reports. 
+Finally, it identifies the most important features used by Random Forest.
 '''
-file_path = os.path.join(os.getcwd(), "machine_learning\creditcard.csv")
+file_path = os.path.join(os.getcwd(), "machine_learning","creditcard.csv")
 
-print(file_path)
 # -----------------------------
 # Load Dataset
 # -----------------------------
 data = pd.read_csv(file_path)
-
+# data.shape returns:(number_of_rows, number_of_columns)
 print("Dataset Shape:")
 print(data.shape)
 
+# Return the first five rows.
 print("\nFirst 5 Rows:")
 print(data.head())
 
 # -----------------------------
 # Check Fraud Distribution
 # -----------------------------
+# data["Class"]: select the target column. .value_counts()Counts how many times each unique value appears.
 fraud_count = data["Class"].value_counts()
 
 print("\nClass Distribution:")
-print(fraud_count)
+print(fraud_count) # accuracy alone is not a good metric for fraud detection.
 
 # 0 = Normal
 # 1 = Fraud
@@ -55,14 +54,21 @@ print(fraud_count)
 # -----------------------------
 # Features and Labels
 # -----------------------------
-X = data.drop("Class", axis=1)
-y = data["Class"]
+# X = data.drop("Class", axis=1); Remove the Class column from the DataFrame. axis=1 means operate on columns.
+X = data.drop("Class", axis=1) # X contains all the input features
+y = data["Class"] # Extracts the target labels.
 
 # -----------------------------
 # Scale Amount and Time
 # -----------------------------
+# Creates an instance of scikit-learn's StandardScaler
+# After scaling, the feature has approximately zero mean and unit variance on the data used to fit the scaler.
 scaler = StandardScaler()
-
+# X["Amount"]: selects the Amount column as a pandas Series. X["Amount"].shape(284807,)
+#  X[["Amount"]]: selects the column as a two-dimensional DataFrame. StandardScaler expects a 2D input. X[["Amount"]].shape (284807, 1)
+# Performs two operations:
+#   1. fit() computes the mean and standard deviation.
+#   2. transform() applies the standardization formula.
 X["Amount"] = scaler.fit_transform(X[["Amount"]])
 X["Time"] = scaler.fit_transform(X[["Time"]])
 
@@ -83,6 +89,7 @@ print("Testing Samples:", len(X_test))
 # -----------------------------
 # Logistic Regression Model
 # -----------------------------
+# create a Logistic Regression classifier. sets the maximum number of iterations used by the optimization solver.
 log_model = LogisticRegression(max_iter=1000)
 
 log_model.fit(X_train, y_train)
@@ -101,13 +108,15 @@ print("\nClassification Report:")
 print(classification_report(y_test, log_predictions))
 
 # -----------------------------
-# Random Forest Model
+# Random Forest Model: Each decision tree makes decisions by splitting the data according to feature values.
 # -----------------------------
+# n_estimators=100 means the model builds 100 decision trees.
+# random_state=42 makes random aspects of training reproducible.
 rf_model = RandomForestClassifier(
     n_estimators=100,
     random_state=42
 )
-
+# Random Forest trains multiple trees using randomized samples of the training data and randomized feature selection.
 rf_model.fit(X_train, y_train)
 
 rf_predictions = rf_model.predict(X_test)
@@ -116,7 +125,7 @@ print("\n===== Random Forest =====")
 
 print("Accuracy:",
       accuracy_score(y_test, rf_predictions))
-
+# A confusion matrix shows correct predictions and classification errors.
 print("\nConfusion Matrix:")
 print(confusion_matrix(y_test, rf_predictions))
 
@@ -126,6 +135,7 @@ print(classification_report(y_test, rf_predictions))
 # -----------------------------
 # Feature Importance
 # -----------------------------
+#rf_model.feature_importances_   extracts feature importance scores calculated by the trained Random Forest.
 importance = rf_model.feature_importances_
 
 feature_names = X.columns
