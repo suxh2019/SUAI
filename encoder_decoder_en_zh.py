@@ -1,8 +1,5 @@
 """Small English-to-Chinese encoder-decoder Transformer, trained from scratch on CPU.
 
-Install: python -m pip install torch
-Run:     python encoder_decoder_en_zh_cpu.py
-
 Educational demo: a tiny dataset enables memorization of simple phrases, NOT general translation.
 """
 import random  # Control Python's random example selection.
