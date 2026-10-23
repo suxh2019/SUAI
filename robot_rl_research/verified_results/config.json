@@ -1,0 +1,19 @@
+{
+  "quick": false,
+  "seeds": [
+    11
+  ],
+  "sizes": [
+    60
+  ],
+  "widths": [
+    32
+  ],
+  "output": "verified_results",
+  "inverse_steps": 120,
+  "world_steps": 180,
+  "critic_steps": 140,
+  "bc_steps": 140,
+  "planning_horizon": 7,
+  "planning_candidates": 50
+}

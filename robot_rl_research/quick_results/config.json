@@ -1,0 +1,19 @@
+{
+  "quick": true,
+  "seeds": [
+    11
+  ],
+  "sizes": [
+    24
+  ],
+  "widths": [
+    32
+  ],
+  "output": "/mnt/data/robot_rl_research/quick_results",
+  "inverse_steps": 35,
+  "world_steps": 35,
+  "critic_steps": 35,
+  "bc_steps": 35,
+  "planning_horizon": 7,
+  "planning_candidates": 25
+}
