@@ -1,4 +1,5 @@
-"""Laptop-sized RLHF demonstration: SFT -> preference reward model -> PPO-style RL.
+"""Laptop-sized RLHF（Reinforcement Learning from Human Feedback (RLHF)） 
+demonstration: SFT -> preference reward model -> PPO-style RL.
 
 Install: python -m pip install torch
 Run:     python rlhf_tiny_llm_cpu.py
