@@ -1,4 +1,4 @@
-"""Laptop-friendly reinforcement learning with verifiable rewards (RLVR).
+"""Laptop-friendly reinforcement learning with verifiable rewards   (RLVR).
 
 A tiny causal Transformer produces ONE answer token (0..9) to an addition prompt.
 The exact arithmetic answer supplies an automatically verifiable 0/1 reward.
