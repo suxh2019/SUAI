@@ -1,5 +1,14 @@
 """Offline Implicit Q-Learning (IQL) for Gymnasium Pendulum-v1, CPU only.
 
+Implicit Q-Learning (IQL) is an offline reinforcement learning algorithm that 
+learns a policy from a fixed dataset without needing to evaluate Q-values for 
+actions outside the dataset during training.
+
+Its central idea is:
+Instead of explicitly maximizing Q-values over potentially unseen actions, IQL 
+learns the value of good actions in the dataset using expectile regression, then 
+trains a policy to imitate those good actions.
+
 Install: pip install torch numpy gymnasium
 Run:     python iql_pendulum_cpu.py
 

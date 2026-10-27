@@ -1,4 +1,10 @@
-"""Discrete-time Linear Quadratic Regulator (LQR), CPU-friendly example."""
+"""Discrete-time Linear Quadratic Regulator (LQR), CPU-friendly example.
+
+Linear Quadratic Regulator (LQR) is a classical optimal control algorithm 
+that computes an optimal feedback policy for a linear dynamical system with a quadratic cost function.
+LQR provides a setting where optimal policies can often be computed analytically.
+
+"""
 
 import numpy as np  # Use NumPy for vectors, matrices, and matrix multiplication.
 import matplotlib.pyplot as plt  # Plot the simulated states and control actions.

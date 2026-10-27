@@ -1,5 +1,12 @@
 """CPU-friendly constrained Model Predictive Control (MPC) example.
 
+Constrained Model Predictive Control (MPC) is an optimal control method that 
+repeatedly solves a finite-horizon optimization problem while explicitly respecting 
+constraints on states and control actions.
+
+LQR: Computes an optimal linear feedback law, typically without explicit state or action constraints.
+Constrained MPC: Solves an optimization problem at every time step, taking constraints into account.
+
 Install: pip install numpy scipy matplotlib
 Run:     python mpc_laptop.py
 """

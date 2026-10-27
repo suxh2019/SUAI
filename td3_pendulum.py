@@ -1,5 +1,15 @@
 """Twin Delayed DDPG (TD3) on Pendulum-v1, designed for CPU laptops.
 
+TD3 (Twin Delayed Deep Deterministic Policy Gradient) is an off-policy, 
+actor-critic reinforcement learning algorithm designed for continuous action spaces.
+TD3 improves upon DDPG (Deep Deterministic Policy Gradient) by addressing one of 
+its major weaknesses: overestimation of Q-values caused by function approximation errors.
+
+TD3 introduces three important techniques:
+1. Twin critics: Use two Q-networks to reduce Q-value overestimation.
+2. Delayed policy updates: Update the actor less frequently than the critics.
+3. Target policy smoothing: Add noise to target actions to prevent the critic from exploiting narrow, inaccurate peaks in Q-values.
+
 Install: pip install torch numpy gymnasium
 Run:     python td3_pendulum_cpu.py
 """
