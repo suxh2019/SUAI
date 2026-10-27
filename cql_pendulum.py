@@ -1,4 +1,7 @@
 """CPU-only continuous-action Conservative Q-Learning (CQL) example.
+Conservative Q-Learning (CQL) is an offline reinforcement learning algorithm designed to
+ address a fundamental problem: standard Q-learning can significantly overestimate the 
+ values of actions that are poorly represented in the training dataset.
 
 Install: pip install torch numpy gymnasium
 Run:     python cql_pendulum_cpu.py

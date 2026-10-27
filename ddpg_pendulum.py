@@ -1,5 +1,12 @@
 """DDPG (Deep Deterministic Policy Gradient) for Gymnasium Pendulum-v1.
 
+Deep Deterministic Policy Gradient (DDPG) is an off-policy, actor-critic reinforcement 
+learning algorithm designed primarily for continuous action spaces.
+It combines three important ideas:
+- Deep Q-learning (DQN): learning a Q-function using Bellman updates and replay buffers.
+- Deterministic Policy Gradient (DPG): directly optimizing a deterministic policy using gradients of the Q-function.
+- Actor-Critic: training separate neural networks for selecting actions and estimating their values.
+
 CPU-only, designed for learning and small laptop experiments.
 Install: pip install torch numpy gymnasium
 Run: python ddpg_pendulum_cpu.py

@@ -1,4 +1,11 @@
 """CPU-friendly Deep Q-Network (DQN) for Gymnasium CartPole-v1.
+
+Deep Q-Network (DQN) is a value-based, off-policy reinforcement learning algorithm 
+that combines classical Q-learning with deep neural networks.
+The central idea is simple: instead of storing Q-values in a table, DQN uses a neural network to approximate 
+the Q-function and selects actions based on the predicted Q-values. DQN is especially useful for discrete 
+action spaces, such as Atari games, grid navigation, and environments like CartPole.
+
 Install: pip install torch numpy gymnasium
 Run: python dqn_cartpole_cpu.py
 """
