@@ -1,5 +1,10 @@
 """Tiny decoder-only Transformer trained from scratch on a laptop CPU.
 
+A decoder-only Transformer is the architecture used by many 
+autoregressive language models, including the GPT family, Llama, and other modern LLMs.
+
+A decoder-only Transformer predicts the next token using only the previous tokens.
+
 Run: python transformer_laptop.py
 Install: python -m pip install torch
 """
