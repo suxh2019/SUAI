@@ -1,5 +1,7 @@
 import torch
 import numpy as np
+
+# Tensor oprations
 x = torch.empty(2,2)
 y = torch.rand(2,2)
 z = torch.zeros(2,2)
@@ -9,15 +11,15 @@ z2 = x * y
 y.add_(x) # _: in placement
 z3 = torch.sub(x,y)
 x = torch.rand(4,4)
-print(x[:,0]) # row, col
-print(x[1,1].item())
+#print(x[:,0]) # row, col
+#print(x[1,1].item())
 y = x.view(16)
-print(y)
+#print(y)
 y = x.view(-1, 8) # torch.size([2,8])
 
 a = torch.ones(5) # if a and b are on cpu, change one value and affect another one
 b = a.numpy()
-print(b)
+# print(b)
 
 a = np.ones(5)
 b = torch.from_numpy(a)
@@ -30,3 +32,5 @@ if torch.cuda.is_available():
     z = x + y
     z =z.to("cpu")
 x = torch.ones(5, requires_grad=True) # calculate the gradient for this tensor
+
+# Gradient calculation with Autograd
