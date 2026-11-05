@@ -34,3 +34,9 @@ if torch.cuda.is_available():
 x = torch.ones(5, requires_grad=True) # calculate the gradient for this tensor
 
 # Gradient calculation with Autograd
+x = torch.rand(3, requires_grad = True)
+y = x + 2
+z = y*y*2
+z = z.mean()
+z.backward() # dz/dx
+print(x.grad)
