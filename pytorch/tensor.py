@@ -37,6 +37,48 @@ x = torch.ones(5, requires_grad=True) # calculate the gradient for this tensor
 x = torch.rand(3, requires_grad = True)
 y = x + 2
 z = y*y*2
-z = z.mean()
-z.backward() # dz/dx
+# z = z.mean() or the below
+v = torch.tensor([0.1,1.0,0.01],dtype = torch.float)
+z.backward(v) # dz/dx
 print(x.grad)
+
+# x.requires_grad_(False)
+x.requires_grad_(False)
+print(x)
+#x.detach
+#with torch.no_grad():
+
+# toy training example
+weights = torch.ones(4, requires_grad= True)
+for epoch in range(3):
+    model_output = (weights * 4).sum()
+    model_output.backward()
+    #print(weights.grad)
+    weights.grad.zero_() # clear the gradient, otherwise, gradients will be cumulated
+
+weights = torch.ones(4, requires_grad= True)
+# Create optimizer
+optimizer = torch.optim.SGD([weights], lr=0.01)
+# Clear previous gradients
+optimizer.zero_grad()
+# Forward pass
+model_output = (weights * 4).sum()
+# Backward pass: compute gradients
+model_output.backward()
+# Update weights
+optimizer.step()
+
+print("Updated weights:", weights)
+print("Gradients:", weights.grad)
+
+#Backpropogation
+x = torch.tensor(1.0)
+y = torch.tensor(2.0)
+w = torch.tensor(1.0, requires_grad= True)
+y_hat = w * x
+loss = (y_hat - y) ** 2
+loss.backward()
+print(w.grad)
+
+#update weights
+#forward pass
