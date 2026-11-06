@@ -6,6 +6,14 @@ LQR provides a setting where optimal policies can often be computed analytically
 
 """
 
+'''
+LQR gives an analytically solvable continuous-control problem. It allows researchers to compare learned 
+RL policies against a known optimal controller and investigate how model uncertainty, risk sensitivity, 
+and function approximation affect policy performance.
+
+LQR is a special case of an optimal control problem that can be formulated as a Markov Decision Process (MDP)
+ and solved using reinforcement learning principles.
+'''
 import numpy as np  # Use NumPy for vectors, matrices, and matrix multiplication.
 import matplotlib.pyplot as plt  # Plot the simulated states and control actions.
 from scipy.linalg import solve_discrete_are  # Solve the discrete algebraic Riccati equation.
