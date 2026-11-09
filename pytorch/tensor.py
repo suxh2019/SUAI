@@ -158,3 +158,20 @@ x, y = bc.data, bc.target
 
 n_samples,n_features = x.shape
 x_train,x_test,y_train,y_test = train_test_split(x, y, test_size = 0.2, random_state=1234)
+
+#scale
+sc = StandardScaler()
+x_train = sc.fit_transform(x_train)
+x_test = sc.transform(x_test)
+
+x_train = torch.from_numpy(x_train.astype(np.float32))
+x_test = torch.from_numpy(x_test.astype(np.float32))
+y_train = torch.from_numpy(y_train.astype(np.float32))
+y_test = torch.from_numpy(y_test.astype(np.float32))
+
+# Reshape the training and testing labels 
+# from a 1D tensor into a 2D column tensor.
+#This is commonly used in PyTorch regression, binary classification, 
+# and neural network training to make the target tensor's shape match the model's output.
+y_train = y_train.view(y_train.shape[0],1)
+y_test = y_test.view(y_test.shape[0],1)
