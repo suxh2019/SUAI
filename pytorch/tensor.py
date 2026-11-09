@@ -1,5 +1,8 @@
 import torch
 import numpy as np
+from sklearn import datasets
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
 # Tensor oprations
 x = torch.empty(2,2)
@@ -149,3 +152,9 @@ print(f'Prediction after training: f(5)={forward(5):.3f}')
 
 
 #----------- loss computation and parameter updates
+# prepare data
+bc = datasets.load_breast_cancer()
+x, y = bc.data, bc.target
+
+n_samples,n_features = x.shape
+x_train,x_test,y_train,y_test = train_test_split(x, y, test_size = 0.2, random_state=1234)
