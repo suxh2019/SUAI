@@ -3,7 +3,10 @@ import numpy as np
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+import torch.nn as nn
 
+# The code is from the video, 
+# which has the link https://www.youtube.com/watch?v=OGpQxIkR4ao&list=PLqnslRFeH2UrcDBWF5mfPGpqQDSta6VK4&index=8
 # Tensor oprations
 x = torch.empty(2,2)
 y = torch.rand(2,2)
@@ -175,3 +178,46 @@ y_test = torch.from_numpy(y_test.astype(np.float32))
 # and neural network training to make the target tensor's shape match the model's output.
 y_train = y_train.view(y_train.shape[0],1)
 y_test = y_test.view(y_test.shape[0],1)
+
+# 1) model; f = wx + b, sigmoid at the end
+class LogisticRegression(nn.Module):
+    def __init__(self, n_input_features):
+        #super(LogisticRegression, self).__init__()
+        super().__init__()
+        # nn.Linear automatically creates learnable weights
+        #  and bias.
+        self.linear = nn.Linear(n_input_features,1)
+    def forward(self, x):
+        y_predicted = torch.sigmoid(self.linear(x))
+        return y_predicted
+model =  LogisticRegression(n_features)
+# 2) loss and optimizer
+learning_rate = 0.01
+criterion = nn.BCELoss()
+optimizer = torch.optim.SGD(model.parameters(),lr = learning_rate)
+
+# 3) training loop
+num_epochs = 100
+for epoch in range(num_epochs):
+    #forward pass and loss
+    y_predicted = model(x_train)
+    loss = criterion(y_predicted, y_train)
+    #backward pass
+    loss.backward()
+    #updates
+    optimizer.step()
+    #zero gradients
+    optimizer.zero_grad()
+    # if (epoch + 1 ) % 10 == 0:
+    #     print(f'epoch:{epoch+1}, loss = {loss.item():.4f}')
+# Do not track operations for automatic differentiation.
+with torch.no_grad():
+    y_predicted = model(x_test)
+    # The .round() function converts probabilities into 0 or 1.
+    y_predicted_cls = y_predicted.round()
+    #.eq() means equal. It compares corresponding elements in two tensors and returns Boolean values.
+    #Counts the number of correct predictions.
+    # y_test.shape[0]: return the number of test samples
+    acc = y_predicted_cls.eq(y_test).sum()/float(y_test.shape[0])
+    #:.4f formats the value with four digits after the decimal point.
+    print(f'accuracy = {acc:.4f}')
