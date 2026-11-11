@@ -10,3 +10,8 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import math
 
+# or a 1D array, axis=0 means sum over the elements of the array
+# axis=0 sums vertically (down each column)
+# axis=1 sums horizontally (across each row)
+def softmax(x):
+    return np.exp(x) /np.sum(np.exp(x),axis = 0)
