@@ -36,3 +36,6 @@ y_pred_bad = torch.tensor([0.1, 0.3, 0.6])
 l1 = loss(y_pred_bad,y)
 l2 = loss(y_pred_good,y)
 print(f'Loss1 torch:{l1.item()}')
+# Activation function
+#Leaky ReLu: try to solve the vanishing gradient problem
+# nn.Sigmoid   torch.sigmoid
